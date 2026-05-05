@@ -10,14 +10,14 @@
         "projectUniqueName": "C:\\Projects\\BlazorTest\\Application\\Application.csproj",
         "projectName": "Application",
         "projectPath": "C:\\Projects\\BlazorTest\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\OuraniaPapadopoulou\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\PolixeniBouzouki\\.nuget\\packages\\",
         "outputPath": "C:\\Projects\\BlazorTest\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\OuraniaPapadopoulou\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PolixeniBouzouki\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -49,7 +49,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
@@ -77,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300-preview.0.26177.108/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -361,14 +361,14 @@
         "projectUniqueName": "C:\\Projects\\BlazorTest\\Domain\\Domain.csproj",
         "projectName": "Domain",
         "projectPath": "C:\\Projects\\BlazorTest\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\OuraniaPapadopoulou\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\PolixeniBouzouki\\.nuget\\packages\\",
         "outputPath": "C:\\Projects\\BlazorTest\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\OuraniaPapadopoulou\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PolixeniBouzouki\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -396,7 +396,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
@@ -418,7 +418,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300-preview.0.26177.108/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

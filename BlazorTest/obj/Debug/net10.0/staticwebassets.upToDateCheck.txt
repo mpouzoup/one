@@ -40,10 +40,10 @@ C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.mi
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map
 C:\Projects\BlazorTest\BlazorTest\Components\Layout\ReconnectModal.razor.js
-C:\Users\OuraniaPapadopoulou\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.7\_framework\blazor.server.js
+C:\Users\PolixeniBouzouki\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.5\_framework\blazor.server.js
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
-C:\Users\OuraniaPapadopoulou\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.7\_framework\blazor.web.js
+C:\Users\PolixeniBouzouki\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.5\_framework\blazor.web.js
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css
 C:\Projects\BlazorTest\BlazorTest\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map
@@ -93,5 +93,5 @@ wwwroot\lib\bootstrap\dist\js\bootstrap.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
-C:\Users\OuraniaPapadopoulou\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.7\build\..\_framework\blazor.server.js
-C:\Users\OuraniaPapadopoulou\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.7\build\..\_framework\blazor.web.js
+C:\Users\PolixeniBouzouki\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.5\build\..\_framework\blazor.server.js
+C:\Users\PolixeniBouzouki\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.5\build\..\_framework\blazor.web.js

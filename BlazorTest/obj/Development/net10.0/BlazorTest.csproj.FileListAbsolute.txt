@@ -202,8 +202,6 @@ C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\e0phaz1lzr-
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\pk8szw0pi4-{0}-63fj8s7r0e-63fj8s7r0e.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\195xkuavjy-{0}-0j3bgjxly4-0j3bgjxly4.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\v66j88j9ml-{0}-abdmv1u4y3-abdmv1u4y3.gz
-C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\y25xqdro7j-{0}-hwaxidwiwj-hwaxidwiwj.gz
-C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\vl3tvi4l6i-{0}-xbbil6v7co-xbbil6v7co.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\74pln6600o-{0}-5s74fcsbig-5s74fcsbig.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\staticwebassets.build.json
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\staticwebassets.build.json.cache
@@ -336,3 +334,6 @@ C:\Projects\BlazorTest\BlazorTest\bin\Development\net10.0\zh-Hant\Microsoft.Code
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\unlu0xluo6-{0}-eu7w3d5g1a-eu7w3d5g1a.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\1x45lb54o8-{0}-boiwgh0w5b-boiwgh0w5b.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\eahr0ray4o-{0}-cx62i52xo9-cx62i52xo9.gz
+C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\BlazorTest.sourcelink.json
+C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\y25xqdro7j-{0}-b9228eflpl-b9228eflpl.gz
+C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\vl3tvi4l6i-{0}-2tj1sjhksk-2tj1sjhksk.gz

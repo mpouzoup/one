@@ -1,18 +1,19 @@
 ﻿@page "/users/edit"
 @using Application.Interfaces
-@using Microsoft.EntityFrameworkCore
+@using Application.IServices
 @using Domain.Models
 @inject IUserService UserService
 @inject ICompanyService CompanyService
+@inject INicknameService NicknameService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-
-<PageTitle>Edit</PageTitle>
+<PageTitle>Edit User</PageTitle>
 
 <h1>Edit</h1>
-
 <h2>User</h2>
 <hr />
+
 @if (User is null)
 {
     <p><em>Loading...</em></p>
@@ -21,43 +22,44 @@ else
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm method="post" Model="User" OnValidSubmit="UpdateUser" FormName="edit" Enhance>
+            <EditForm EditContext="editContext" OnValidSubmit="UpdateUser">
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="User.Id" value="@User.Id" />
+                <ValidationSummary role="alert" />
+
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
                     <InputText id="name" @bind-Value="User.Name" class="form-control" />
                     <ValidationMessage For="() => User.Name" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="lastname" class="form-label">LastName:</label>
                     <InputText id="lastname" @bind-Value="User.LastName" class="form-control" />
                     <ValidationMessage For="() => User.LastName" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="phonenumber" class="form-label">PhoneNumber:</label>
                     <InputText id="phonenumber" @bind-Value="User.PhoneNumber" class="form-control" />
                     <ValidationMessage For="() => User.PhoneNumber" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <InputText id="email" @bind-Value="User.Email" class="form-control" />
                     <ValidationMessage For="() => User.Email" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="afm" class="form-label">AFM:</label>
                     <InputText id="afm" @bind-Value="User.AFM" class="form-control" />
                     <ValidationMessage For="() => User.AFM" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="company" class="form-label">Company:</label>
-                    @*
-                       Fix: Ensure User.CompanyId is an int. 
-                       InputSelect handles the conversion automatically if the property is typed correctly.
-                    *@
                     <InputSelect id="company" @bind-Value="User.CompanyId" class="form-select">
-                        <option value="0">-- Select a Company --</option>
+                        <option value="">-- Select a Company --</option>
                         @foreach (var company in CompaniesList)
                         {
                             <option value="@company.Id">@company.Name</option>
@@ -65,44 +67,124 @@ else
                     </InputSelect>
                     <ValidationMessage For="() => User.CompanyId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <div class="mb-3">
+                    <label class="form-label">Nicknames:</label>
+                    <div class="input-group mb-2" style="width: 300px;">
+                        <InputText @bind-Value="newNickname" class="form-control" placeholder="Προσθήκη νέου..." />
+                        <button type="button" class="btn btn-outline-success" @onclick="AddNicknameToUser">Προσθήκη</button>
+                    </div>
+
+                    @if (User.Nicknames != null)
+                    {
+                        <div class="list-group" style="max-width: 400px;">
+                            @foreach (var nickname in User.Nicknames)
+                            {
+                                <div class="list-group-item d-flex gap-2 align-items-center">
+                                    <InputText @bind-Value="nickname.Value" class="form-control form-control-sm" />
+                                    <button type="button" class="btn btn-sm btn-danger" @onclick="() => HandleDeleteNickname(nickname)">Διαγραφή</button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/users">Back to List</a>
-</div>
-
 @code {
     [SupplyParameterFromQuery]
     private int Id { get; set; }
 
-    [SupplyParameterFromForm]
     private User? User { get; set; }
-
+    private string? newNickname;
     private List<Company> CompaniesList = new();
+
+    private EditContext? editContext;
+    private ValidationMessageStore? messageStore;
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        CompaniesList = await CompanyService.GetAllCompanies();
+        User = await UserService.GetUserByID(Id);
+
+        if (User is null)
         {
-            User = await UserService.GetUserByID(Id);
-            CompaniesList = await CompanyService.GetAllCompanies();
+            NavigationManager.NavigateTo("/notfound");
         }
-        catch (Exception ex)
+        else
         {
-            NavigationManager.NotFound();
+            editContext = new EditContext(User);
+            messageStore = new ValidationMessageStore(editContext);
         }
     }
-    
+
+    private void AddNicknameToUser()
+    {
+        if (!string.IsNullOrWhiteSpace(newNickname) && User != null)
+        {
+            User.Nicknames.Add(new Nickname
+            {
+                Value = newNickname,
+                UserId = User.Id
+            });
+            newNickname = string.Empty;
+        }
+    }
+
+    private async Task HandleDeleteNickname(Nickname nick)
+    {
+        if (nick.Id != 0)
+        {
+            await NicknameService.DeleteById(nick.Id);
+        }
+        User?.Nicknames.Remove(nick);
+    }
+
     private async Task UpdateUser()
-    {      
+    {
+        if (User == null || editContext == null || messageStore == null) return;
 
-        await UserService.Update(User);
+        messageStore.Clear();
 
-        NavigationManager.NavigateTo("/user-management");
+        if (!Application.Utilities.VatValidator.ValidateVatNumber(User.AFM))
+        {
+            messageStore.Add(() => User.AFM, "Το ΑΦΜ δεν είναι έγκυρο.");
+            editContext.NotifyValidationStateChanged();
+            return;
+        }
+
+        if (editContext.Validate())
+        {
+            try
+            {
+                await UserService.Update(User);
+                if (User.Nicknames != null)
+                {
+                    foreach (var nick in User.Nicknames)
+                    {
+                        if (nick.Id == 0)
+                        {
+                            await NicknameService.Save(nick);
+                        }
+                        else
+                        {
+                            await NicknameService.Update(nick);
+                        }
+                    }
+                }
+
+                NavigationManager.NavigateTo("/user-management");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
     }
-     
+
+    private void Cancel() => NavigationManager.NavigateTo("/user-management");
 }

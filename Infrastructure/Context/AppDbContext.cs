@@ -24,8 +24,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Company> Companies { get; set; }
+    public virtual DbSet<Nickname> Nicknames { get; set; }
 
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
          
@@ -33,7 +33,17 @@ public partial class AppDbContext : DbContext
             .HasMany(c => c.Users)
             .WithOne(x => x.Company)
             .HasForeignKey(p => p.CompanyId)                           
-            .OnDelete(DeleteBehavior.Cascade); 
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Nickname>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(n => n.User)
+                .WithMany(u => u.Nicknames)
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 
 }

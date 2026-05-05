@@ -30,7 +30,16 @@
 <div style="margin-bottom: 20px;">
     <label>AFM:</label>
     <br />
-    <input type="text" @bind="AFM" style="width: 300px; padding: 8px; font-size: 16px;" />
+    <input type="text"
+           value="@AFM"
+           @oninput="OnAfmInput"
+           style="width: 300px; padding: 8px; font-size: 16px;"
+           maxlength="9" />
+
+    @if (!string.IsNullOrEmpty(afmError))
+    {
+        <span style="color: red; font-weight: bold; font-size: 14px;">@afmError</span>
+    }
 </div>
 
 <div style="margin-bottom: 20px;">
@@ -57,37 +66,48 @@
     private string errorMessage = "";
     private string successMessage = "";
     private string fullstings = "";
+    private string afmError = "";
+
+    private void OnAfmInput(ChangeEventArgs e)
+    {
+        var val = e.Value?.ToString() ?? "";
+
+        // Check for non-digits
+        if (val.Any(c => !char.IsDigit(c)))
+        {
+            afmError = "Επιτρέπονται μόνο αριθμοί!";
+        }
+        else if (val.Length > 0 && val.Length < 9)
+        {
+            afmError = "Απαιτούνται 9 ψηφία.";
+        }
+        else
+        {
+            afmError = "";
+        }
+
+        AFM = new string(val.Where(char.IsDigit).ToArray());
+    }
 
     private bool Validation()
     {
+        errorMessage = "";
+
         if (firstName.Length < 3)
         {
             errorMessage = "Το όνομα πρέπει να έχει τουλάχιστον 3 γράμματα.";
             return false;
         }
 
-        if (!email.Contains("@") || !email.Contains("."))
+        if (!Application.Utilities.VatValidator.ValidateVatNumber(AFM))
         {
-            errorMessage = "Παρακαλώ βάλε ένα έγκυρο email.";
-            return false;
-        }
-
-        if (AFM.Length != 9)
-        {
-            errorMessage = "Πρέπει να εκχωρήσεις 9 ψηφία.";
-            return false;
-        }
-
-        if (phoneNumber != "" && phoneNumber.Length != 10)
-        {
-            errorMessage = "Πρέπει να εκχωρήσεις έγκυρο κινητό τηλέφωνο.";
+            errorMessage = "Το ΑΦΜ δεν είναι έγκυρο. Πρέπει να έχει 9 ψηφία και σωστό αλγόριθμο.";
             return false;
         }
 
         successMessage = "Τα στοιχεία αποθηκεύτηκαν!";
         return true;
     }
-
     private async Task SubmitData()
     {
         if (!Validation())

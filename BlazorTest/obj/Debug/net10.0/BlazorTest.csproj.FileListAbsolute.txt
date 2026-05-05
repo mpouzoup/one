@@ -337,3 +337,4 @@ C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\BlazorTest.genruntimeconfig.
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\ref\BlazorTest.dll
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\compressed\y25xqdro7j-{0}-b9228eflpl-b9228eflpl.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\compressed\vl3tvi4l6i-{0}-2tj1sjhksk-2tj1sjhksk.gz
+C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\BlazorTest.sourcelink.json

@@ -27,7 +27,16 @@ else
         <PropertyColumn Property="u => u.AFM" Title="AFM" />
         <PropertyColumn Property="u => u.PhoneNumber" Title="Phone Number" />
         <PropertyColumn Property="u => u.CompanyId" Title="Company Id" />
-
+        <TemplateColumn Title="Nicknames" Context="user">
+            @if (user.Nicknames != null && user.Nicknames.Any())
+            {
+                @string.Join(", ", user.Nicknames.Select(n => n.Value))
+            }
+            else
+            {
+                <span class="text-muted">No nicknames</span>
+            }
+        </TemplateColumn>
         <TemplateColumn Context="user" Title="Actions">            
             <button class="btn btn-sm btn-primary" @onclick="() => GoToEdit(user.Id)">Edit</button>
             <button class="btn btn-sm btn-danger" @onclick="() => GoToDelete(user.Id)">Delete</button>

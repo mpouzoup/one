@@ -1,10 +1,13 @@
 ﻿
 using Application.Interfaces;
+using Application.IServices;
+using Application.Utilities;
 using Domain.IRepositories;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 
 namespace Application.Services;
 
@@ -13,12 +16,14 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly ICompanyService _companyService;
+    private readonly INicknameService _nicknameService;
     
 
-    public UserService(IUserRepository userRepository,ICompanyService companyService)
+    public UserService(IUserRepository userRepository,ICompanyService companyService, INicknameService nicknameService)
     {
         _userRepository = userRepository;        
         _companyService = companyService;
+        _nicknameService = nicknameService;
     }
 
     public Task<User> DuplicateUser(User user, User user2)
@@ -35,32 +40,52 @@ public class UserService : IUserService
     {
         try
         {
-            if (user.CompanyId != null)
+            if (!VatValidator.ValidateVatNumber(user.AFM))
             {
-               var company= await _companyService.GetCompanyByID((int)user.CompanyId);
-                Console.WriteLine(company.Name);
-
+                throw new Exception("The AFM provided is invalid.");
             }
-            _userRepository.Add(user);
-
+            User newUser = new User
+            {
+                Name = user.Name,
+                LastName = user.LastName,
+                AFM = user.AFM,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Company = user.Company,
+                CompanyId = user.CompanyId
+            };
+            _userRepository.Add(newUser);
             await _userRepository.SaveChangesAsync();
-            return user;
+            if (user.Nicknames != null)
+            {
+                foreach (var item in user.Nicknames)
+                {
+                    item.UserId = newUser.Id;
+                    await _nicknameService.Save(item);
+                }
+            }
 
-        }catch(Exception ex)
+            return newUser;
+        }
+        catch (Exception ex)
         {
             throw;
         }
     }
-
-
     public async Task<User> Update(User user)
     {
         try
         {
             var existingUser = await _userRepository.GetUserById(user.Id);
             if (existingUser == null)
-                throw new Exception("Exception");
-            existingUser.UpdateValues(user);             
+                throw new Exception("User not found");
+
+            if (!VatValidator.ValidateVatNumber(user.AFM))
+            {
+                throw new Exception("The AFM provided is invalid.");
+            }
+
+            existingUser.UpdateValues(user);
             await _userRepository.SaveChangesAsync();
 
             return existingUser;

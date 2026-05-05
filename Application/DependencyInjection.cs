@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using Application.IServices;
+using Domain.IRepositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICompanyService,CompanyService>();
+        services.AddScoped<INicknameService,NicknameService>();
+
         return services;
     }
 }

@@ -37,9 +37,25 @@
                 <ValidationMessage For="() => User.Email" class="text-danger" />
             </div>
             <div class="mb-3">
+                @* We set a fixed width for the label so the input boxes line up vertically *@
                 <label for="AFM" class="form-label">AFM:</label>
-                <InputText id="AFM" @bind-Value="User.AFM" class="form-control" />
-                <ValidationMessage For="() => User.AFM" class="text-danger" />
+
+                <div style="flex-grow: 0;">
+                    <InputText id="AFM"
+                               @bind-Value="User.AFM"
+                               class="form-control"
+                               style="width: 300px;"
+                               maxlength="9" />
+                </div>
+
+                @* Standard Blazor Validation (Regex/Length) *@
+                <ValidationMessage For="() => User.AFM" class="text-danger" style="font-weight: bold; font-size: 14px;" />
+
+                @* Server-side Validation (The 'Invalid AFM' message from your Service) *@
+                @if (!string.IsNullOrEmpty(serverError))
+                {
+                    <span class="text-danger" style="font-weight: bold; font-size: 14px;">@serverError</span>
+                }
             </div>
             <div class="mb-3">
                 <label for="Phone Number" class="form-label">Phone Number:</label>
@@ -57,6 +73,25 @@
                 </InputSelect>
                 <ValidationMessage For="() => User.CompanyId" class="text-danger" />
             </div>
+            <div class="mb-3">
+                <label class="form-label">Nicknames:</label>
+                <div class="input-group mb-2" style="width: 300px;">
+                    <InputText @bind-Value="newNickname" class="form-control" placeholder="Enter nickname" />
+                    <button type="button" class="btn btn-outline-secondary" @onclick="AddNicknameToList">Add</button>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var nick in NicknameStrings)
+                    {
+                        <span class="badge bg-info text-dark p-2">
+                            @nick
+                            <button type="button" class="btn-close btn-close-white ms-2"
+                                    style="font-size: 0.5rem;"
+                                    @onclick="() => RemoveNickname(nick)"></button>
+                        </span>
+                    }
+                </div>
+            </div>
 
             <button type="submit" class="btn btn-primary">Create</button>
             <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
@@ -67,17 +102,54 @@
 @code {
     private User User { get; set; } = new();
     private List<Company> CompaniesList = new();
+    private string? newNickname;
+    private List<string> NicknameStrings = new();
+    private string? serverError;
 
     protected override async Task OnInitializedAsync()
     {
         CompaniesList = await CompanyService.GetAllCompanies();
     }
 
+    private void AddNicknameToList()
+    {
+        if (!string.IsNullOrWhiteSpace(newNickname) && !NicknameStrings.Contains(newNickname))
+        {
+            NicknameStrings.Add(newNickname);
+            newNickname = string.Empty;
+        }
+    }
+
+    private void RemoveNickname(string nick)
+    {
+        NicknameStrings.Remove(nick);
+    }
+
     private async Task AddUser()
     {
-        await UserService.Save(User);
-        
-        NavigationManager.NavigateTo("/user-management");
+        serverError = null;
+
+        if (!Application.Utilities.VatValidator.ValidateVatNumber(User.AFM))
+        {
+            serverError = "Το ΑΦΜ δεν είναι έγκυρο (Λάθος ψηφία ή αλγόριθμος).";
+            return;
+        }
+
+        try
+        {
+            User.Nicknames = NicknameStrings.Select(name => new Nickname
+            {
+                Value = name
+            }).ToList();
+
+            await UserService.Save(User);
+            NavigationManager.NavigateTo("/user-management");
+
+        }
+        catch (Exception ex)
+        {
+            serverError = ex.Message;
+        }
     }
 
     private void Cancel() => NavigationManager.NavigateTo("/user-management");

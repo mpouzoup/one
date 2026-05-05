@@ -20,12 +20,15 @@ public class UserRepository : UnitOfWork, IUserRepository
     public async Task<List<User>> GetAll()
     {
         return await _dbContext.Users
+                               .Include(u => u.Nicknames)
                                .AsNoTracking()
                                .ToListAsync();
     }
 
     public async Task<User?> GetUserById(int userId)
     {
-        return await _dbContext.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
+        return await _dbContext.Users
+                           .Include(u => u.Nicknames)
+                           .FirstOrDefaultAsync(x => x.Id == userId);
     }
 }

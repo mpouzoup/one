@@ -142,16 +142,79 @@ public class UserService : IUserService
             
             var user = await _userRepository.GetUserByEmail(signUpDto.Email);
             if (user != null)
-                throw new Exception("User exists");
+                throw new Exception("A user with this email already exists.");
+
+            if (!VatValidator.ValidateVatNumber(signUpDto.AFM))
+                throw new Exception("The AFM provided is invalid.");
             var newUser = new User()
             {
                 Name = signUpDto.Name,
-                
+                LastName = signUpDto.LastName,
+                Email = signUpDto.Email,
+                PhoneNumber = signUpDto.PhoneNumber,
+                AFM = signUpDto.AFM,
+                Password = PasswordEncryption.HashPassword(signUpDto.Password),                
             };
+            _userRepository.Add(newUser);
+            await _userRepository.SaveChangesAsync();
+
+            var newRole = new UserRoles()
+            {
+                UserId = newUser.Id,
+                RoleId = 3
+            };
+
+            _userRepository.Add(newRole);
+            await _userRepository.SaveChangesAsync();
+
             return newUser;
-        }catch(Exception ex)
+        }
+        catch(Exception ex)
         {            
             throw;
         }
+    }
+
+    public async Task<User?> Login(LoginModel loginDto)
+    {
+        var user = await _userRepository.GetUserByEmail(loginDto.Email);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        bool isPasswordValid = PasswordEncryption.VerifyPassword(loginDto.Password, user.Password);
+
+        if (!isPasswordValid)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    public async Task<User> AdminRegisterUser(SignUpDto dto, int roleId)
+    {
+        var existingUser = await _userRepository.GetUserByEmail(dto.Email);
+        if (existingUser != null) throw new Exception("User already exists");
+
+        var newUser = new User
+        {
+            Name = dto.Name,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            PhoneNumber = dto.PhoneNumber,
+            AFM = dto.AFM,
+            Password = PasswordEncryption.HashPassword(dto.Password),
+            UserRoles = new List<UserRoles>
+        {
+            new UserRoles { RoleId = roleId }
+        }
+        };
+
+        _userRepository.Add(newUser);
+        await _userRepository.SaveChangesAsync();
+        return newUser;
     }
 }

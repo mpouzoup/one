@@ -64,7 +64,6 @@
     {
         errorMessage = null;
 
-        // 1. Custom Validation Logic
         if (signUpDto.Password != signUpDto.RepeatPassword)
         {
             errorMessage = "Passwords do not match.";
@@ -73,10 +72,9 @@
 
         try
         {
-            // 2. Call your Service
-            // var result = await UserService.SignUpAsync(signUpDto);
+            var newUser = await UserService.SignUp(signUpDto);
 
-            if (true) // Assuming the service returns a boolean or success object
+            if (newUser != null && newUser.Id > 0) 
             {
                 NavManager.NavigateTo("/login");
             }
@@ -87,7 +85,8 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"An error occurred: {ex.Message}";
+            errorMessage = ex.Message;
         }
     }
+    
 }

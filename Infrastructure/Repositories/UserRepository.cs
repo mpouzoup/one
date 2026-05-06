@@ -21,13 +21,17 @@ public class UserRepository : UnitOfWork, IUserRepository
     {
         return await _dbContext.Users
                                .Include(u => u.Nicknames)
+                               .Include(u => u.UserRoles)
+                               .ThenInclude(ur => ur.Role)
                                .AsNoTracking()
                                .ToListAsync();
     }
 
     public async Task<User?> GetUserByEmail(string email)
     {
-        return await _dbContext.Users                           
+        return await _dbContext.Users
+                           .Include(u => u.UserRoles)
+                           .ThenInclude(ur => ur.Role)
                            .FirstOrDefaultAsync(x => x.Email == email);
     }
 

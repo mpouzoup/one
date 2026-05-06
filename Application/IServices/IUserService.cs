@@ -11,6 +11,7 @@ public interface IUserService
     public Task<User> Save(User user);
     public Task<User> Update(User user);
     public Task<User> SignUp(SignUpDto signUpDto);
+    public Task<User?> Login(LoginModel loginDto);
     public Task DeleteById(int userId);
     public Task<User?> GetUser(User user);    
     public Task<User?> GetUserByID(int userId);

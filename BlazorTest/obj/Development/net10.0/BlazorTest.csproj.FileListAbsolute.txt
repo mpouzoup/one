@@ -337,3 +337,4 @@ C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\eahr0ray4o-
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\BlazorTest.sourcelink.json
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\y25xqdro7j-{0}-b9228eflpl-b9228eflpl.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Development\net10.0\compressed\vl3tvi4l6i-{0}-2tj1sjhksk-2tj1sjhksk.gz
+C:\Projects\BlazorTest\BlazorTest\bin\Development\net10.0\BCrypt.Net-Next.dll

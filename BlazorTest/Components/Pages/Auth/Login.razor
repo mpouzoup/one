@@ -1,0 +1,63 @@
+﻿@page "/login"
+@using Application.Interfaces
+@rendermode InteractiveServer
+@inject IUserService UserService
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Login</h3>
+
+                    <EditForm Model="@loginUser" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <InputText id="email" class="form-control" @bind-Value="loginUser.Email" placeholder="name@example.com" />
+                            <ValidationMessage For="@(() => loginUser.Email)" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <InputText id="password" type="password" class="form-control" @bind-Value="loginUser.Password" />
+                            <ValidationMessage For="@(() => loginUser.Password)" class="text-danger" />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@errorMessage</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Application.Dtos.Auth.LoginModel loginUser = new();
+    private string? errorMessage;
+
+    private async Task HandleLogin()
+    {
+        errorMessage = null;
+        
+        if (loginUser.Email == "admin@example.com" && loginUser.Password == "Password123")
+        {
+           
+            Console.WriteLine("Login Successful!");
+        }
+        else
+        {
+            errorMessage = "Invalid login credentials.";
+        }
+    }
+}

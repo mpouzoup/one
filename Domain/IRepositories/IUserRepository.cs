@@ -7,6 +7,7 @@ namespace Domain.IRepositories;
 
 public interface IUserRepository : IUnitOfWork
 {
-    public Task<User?> GetUserById(int userId);
+    Task<User?> GetUserById(int userId);
+    Task<User?> GetUserByEmail(string email);
     Task<List<User>> GetAll();  
 }

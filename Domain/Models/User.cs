@@ -13,12 +13,15 @@ public class User : Entity
     public int Id{ get; set; }
     public string Name{ get; set; }
     public string LastName{ get; set; }
-    public string PhoneNumber{ get; set; }
+    public string PhoneNumber{ get; set; }    
     public string Email{ get; set; }
     public string AFM{ get; set; }
+    public string Password { get; set; }
     public int? CompanyId{ get; set; }
+    public List<UserRoles> UserRoles { get; set; }
     virtual public Company? Company { get; set; } = default;
     virtual public List<Nickname> Nicknames { get; set; } = new List<Nickname>();
+    
 
     public User UpdateValues(User user)
     {

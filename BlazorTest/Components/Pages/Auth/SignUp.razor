@@ -1,0 +1,93 @@
+﻿@page "/signup"
+@using Application.Interfaces
+@using Application.Dtos.Auth
+@rendermode InteractiveServer
+@inject IUserService UserService
+@inject NavigationManager NavManager
+
+<div class="container mt-4" style="max-width: 500px;">
+    <h3>Create an Account</h3>
+
+    <EditForm Model="@signUpDto" OnValidSubmit="HandleSignUpSubmit" FormName="SignUpForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
+
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <InputText @bind-Value="signUpDto.Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <InputText @bind-Value="signUpDto.LastName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <InputText @bind-Value="signUpDto.Email" class="form-control" type="email" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <InputText @bind-Value="signUpDto.PhoneNumber" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">AFM (Tax ID)</label>
+            <InputText @bind-Value="signUpDto.AFM" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <InputText @bind-Value="signUpDto.Password" class="form-control" type="password" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Repeat Password</label>
+            <InputText @bind-Value="signUpDto.RepeatPassword" class="form-control" type="password" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </EditForm>
+</div>
+
+@code {
+    private SignUpDto signUpDto = new();
+    private string? errorMessage;
+
+    private async Task HandleSignUpSubmit()
+    {
+        errorMessage = null;
+
+        // 1. Custom Validation Logic
+        if (signUpDto.Password != signUpDto.RepeatPassword)
+        {
+            errorMessage = "Passwords do not match.";
+            return;
+        }
+
+        try
+        {
+            // 2. Call your Service
+            // var result = await UserService.SignUpAsync(signUpDto);
+
+            if (true) // Assuming the service returns a boolean or success object
+            {
+                NavManager.NavigateTo("/login");
+            }
+            else
+            {
+                errorMessage = "Registration failed. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+}

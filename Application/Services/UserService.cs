@@ -1,4 +1,5 @@
 ﻿
+using Application.Dtos.Auth;
 using Application.Interfaces;
 using Application.IServices;
 using Application.Utilities;
@@ -130,6 +131,26 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
+            throw;
+        }
+    }
+
+    public async Task<User> SignUp(SignUpDto signUpDto)
+    {
+        try
+        {
+            
+            var user = await _userRepository.GetUserByEmail(signUpDto.Email);
+            if (user != null)
+                throw new Exception("User exists");
+            var newUser = new User()
+            {
+                Name = signUpDto.Name,
+                
+            };
+            return newUser;
+        }catch(Exception ex)
+        {            
             throw;
         }
     }

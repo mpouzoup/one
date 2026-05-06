@@ -28,22 +28,49 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-         
-        modelBuilder.Entity<Company>()
-            .HasMany(c => c.Users)
-            .WithOne(x => x.Company)
-            .HasForeignKey(p => p.CompanyId)                           
-            .OnDelete(DeleteBehavior.Cascade);
+                  
 
         modelBuilder.Entity<Nickname>(entity =>
         {
             entity.HasKey(e => e.Id);
-
             entity.HasOne(n => n.User)
                 .WithMany(u => u.Nicknames)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<Department>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(n => n.Company)
+                .WithMany(u => u.Departments)
+                .HasForeignKey(n => n.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(n => n.Company)
+                .WithMany(u => u.Users)
+                .HasForeignKey(n => n.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);            
+            entity.HasIndex(u => u.Email)
+            .IsUnique();
+        });
+
+        modelBuilder.Entity<UserRoles>()
+        .HasKey(ur => new { ur.UserId, ur.RoleId }); 
+
+        modelBuilder.Entity<UserRoles>()
+            .HasOne(ur => ur.User)
+            .WithMany(u => u.UserRoles)
+            .HasForeignKey(ur => ur.UserId);
+
+        modelBuilder.Entity<UserRoles>()
+            .HasOne(ur => ur.Role)
+            .WithMany(r => r.UserRoles)
+            .HasForeignKey(ur => ur.RoleId);        
     }
 
 }

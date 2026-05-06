@@ -34,6 +34,14 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXExvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/SignUp.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXFNpZ25VcC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/Company/CompanyManagement.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb21wYW55XENvbXBhbnlNYW5hZ2VtZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,10 +64,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Projects/BlazorTest/BlazorTest/Components/Pages/PersonalInfo.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQZXJzb25hbEluZm8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/Create.razor]

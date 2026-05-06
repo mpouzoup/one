@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Application.Dtos.Auth;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,7 @@ public interface IUserService
 {
     public Task<User> Save(User user);
     public Task<User> Update(User user);
+    public Task<User> SignUp(SignUpDto signUpDto);
     public Task DeleteById(int userId);
     public Task<User?> GetUser(User user);    
     public Task<User?> GetUserByID(int userId);

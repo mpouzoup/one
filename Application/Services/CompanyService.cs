@@ -53,23 +53,13 @@ public class CompanyService : ICompanyService
     public async Task<Company?> GetCompanyById(int companyId)
 
     {
-
         try
-
         {
-
             var existingCompany = await _companyRepository.GetCompanyById(companyId);
-
             if (existingCompany == null)
-
                 throw new Exception("Exception");
-
-
-
             return existingCompany;
-
         }
-
         catch (Exception ex)
 
         {
@@ -105,10 +95,9 @@ public class CompanyService : ICompanyService
         return await _companyRepository.GetCompanyById(company.Id);
     }
     
-    public async Task<Company?> GetCompanyByID(int companyId)
+    public async Task<List<User>> GetEmployeesByCompanyId(int companyId)
     {
-        return await this.GetCompanyById(companyId);
+        return await _companyRepository.GetEmployeesByCompanyId(companyId);
     }
-
 
 }

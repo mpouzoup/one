@@ -5,6 +5,8 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>User Management</PageTitle>
 

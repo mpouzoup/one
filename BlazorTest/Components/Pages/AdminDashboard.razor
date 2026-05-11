@@ -1,4 +1,6 @@
-﻿@page "/admin/manage-users"
+﻿@page "/admin/admin-dashboard"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @using Application.Interfaces
 @using Domain.Models
 @inject IUserService UserService
@@ -6,7 +8,7 @@
 
 <h3>Admin Panel: Manage Users</h3>
 
-@if (CurrentUserRoles.Contains("Admin"))
+@if (CurrentUserRoles.Any(r => r.Equals("Admin", StringComparison.OrdinalIgnoreCase)))
 {
     <button class="btn btn-success" @onclick="OpenRegistrationForm">Register New Staff</button>
 
@@ -45,12 +47,20 @@ else
     {
         allUsers = await UserService.GetAllUsers();
 
-        // FOR TESTING ONLY:
-        // Let's pretend the first user in the list is the one logged in
-        var testUser = allUsers.FirstOrDefault(u => u.Email == "admin@example.com");
+        var testUser = allUsers.FirstOrDefault(u =>
+            u.Email.Equals("admin1@example.com", StringComparison.OrdinalIgnoreCase));
+
         if (testUser?.UserRoles != null)
         {
-            CurrentUserRoles = testUser.UserRoles.Select(ur => ur.Role.Name).ToList();
+            CurrentUserRoles = testUser.UserRoles
+                .Where(ur => ur.Role != null)
+                .Select(ur => ur.Role.Name)
+                .ToList();
+
+            foreach (var role in CurrentUserRoles)
+            {
+                Console.WriteLine($"Found Role: '{role}'");
+            }
         }
     }
 
@@ -67,4 +77,4 @@ else
     }
 }
 
-dotnet ef migrations add  --project Infrastructure --startup-project BlazorTest  --configuration Development
+@* dotnet ef migrations add  --project Infrastructure --startup-project BlazorTest  --configuration Development *@

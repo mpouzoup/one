@@ -5,8 +5,12 @@ using Application.IServices;
 using Application.Utilities;
 using Domain.IRepositories;
 using Domain.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 
@@ -18,13 +22,15 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly ICompanyService _companyService;
     private readonly INicknameService _nicknameService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     
 
-    public UserService(IUserRepository userRepository,ICompanyService companyService, INicknameService nicknameService)
+    public UserService(IUserRepository userRepository,ICompanyService companyService, INicknameService nicknameService, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;        
         _companyService = companyService;
         _nicknameService = nicknameService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public Task<User> DuplicateUser(User user, User user2)
@@ -144,8 +150,8 @@ public class UserService : IUserService
             if (user != null)
                 throw new Exception("A user with this email already exists.");
 
-            if (!VatValidator.ValidateVatNumber(signUpDto.AFM))
-                throw new Exception("The AFM provided is invalid.");
+            //if (!VatValidator.ValidateVatNumber(signUpDto.AFM))
+            //    throw new Exception("The AFM provided is invalid.");
             var newUser = new User()
             {
                 Name = signUpDto.Name,
@@ -161,7 +167,7 @@ public class UserService : IUserService
             var newRole = new UserRoles()
             {
                 UserId = newUser.Id,
-                RoleId = 3
+                RoleId = 1
             };
 
             _userRepository.Add(newRole);
@@ -190,6 +196,28 @@ public class UserService : IUserService
         {
             return null;
         }
+        var claims = new List<Claim>
+        {
+
+            new Claim(ClaimTypes.Name, user.Email, ClaimValueTypes.String),
+
+            new Claim(ClaimTypes.Role, user.UserRoles.FirstOrDefault().Role.Name, ClaimValueTypes.String),
+
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var principal = new ClaimsPrincipal(identity);
+
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        if (httpContext != null)
+
+        {
+
+            await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+        }
 
         return user;
     }
@@ -217,4 +245,6 @@ public class UserService : IUserService
         await _userRepository.SaveChangesAsync();
         return newUser;
     }
+
+
 }

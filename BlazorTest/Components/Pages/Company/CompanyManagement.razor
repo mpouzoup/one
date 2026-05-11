@@ -4,38 +4,44 @@
 @inject ICompanyService CompanyService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Manager")]
+@using Microsoft.AspNetCore.Authorization
 
 <h3>Company Management</h3>
 
 <button class="btn btn-success mb-3" @onclick="OpenCreateModal">Add Company</button>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Actions</th>
             <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th style="width: 300px;">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var company in companies)
         {
             <tr>
+                <td>@company.Id</td>
                 <td>@company.Name</td>
                 <td>@company.Address</td>
-                <td>@company.Id</td>
                 <td>
                     <button class="btn btn-primary btn-sm" @onclick="() => OpenEditModal(company)">Edit</button>
-                    <button class="btn btn-sm btn-danger" @onclick="() => GoToDelete(company.Id)">Delete</button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => HandleDelete(company.Id)">Delete</button>
+                    <button class="btn btn-info btn-sm" @onclick="() => ManageEmployees(company.Id)">
+                        View Employees
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<CompanyModal IsVisible="isModalVisible" 
-              CurrentCompany="selectedCompany" 
-              OnSave="RefreshData" 
+<CompanyModal IsVisible="isModalVisible"
+              CurrentCompany="selectedCompany"
+              OnSave="RefreshData"
               OnClose="HideModal" />
 
 @code {
@@ -65,19 +71,24 @@
         selectedCompany = company;
         isModalVisible = true;
     }
-    private async Task GoToDelete(int id) => await HandleDelete(id);
+
+    private void HideModal() => isModalVisible = false;
+
+    private void ManageEmployees(int id)
+    {
+        NavigationManager.NavigateTo($"/my-employees/{id}");
+    }
 
     private async Task HandleDelete(int id)
     {
         try
         {
             await CompanyService.DeleteById(id);
-            NavigationManager.NavigateTo("company-management");
+            await RefreshData();
         }
         catch (Exception ex)
         {
-            NavigationManager.NotFound();
+            Console.WriteLine($"Error deleting company: {ex.Message}");
         }
     }
-    private void HideModal() => isModalVisible = false;
 }

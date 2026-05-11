@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using Application.Interfaces
+@using Domain.Models
 @rendermode InteractiveServer
 @inject IUserService UserService
 @inject NavigationManager NavManager
@@ -44,6 +45,11 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    public HttpContext? HttpContext{ get; set; }
+
+    [SupplyParameterFromForm]
+    public LoginView Model { get; set; } = new();
     private Application.Dtos.Auth.LoginModel loginUser = new();
     private string? errorMessage;
 
@@ -57,8 +63,15 @@
 
             if (user != null)
             {
-                Console.WriteLine($"Login Successful for {user.Name}!");
-                NavManager.NavigateTo("/admin/manage-users");
+                if(user.UserRoles.Any(x => x.RoleId == 3))
+                {
+                    NavManager.NavigateTo("/personal-info");  
+                }
+                else
+                {
+                    NavManager.NavigateTo("/user-management");
+                    
+                }
             }
             else
             {

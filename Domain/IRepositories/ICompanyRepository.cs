@@ -9,4 +9,5 @@ public interface ICompanyRepository: IUnitOfWork
 {
     Task<Company?> GetCompanyById(int companyId);
     Task<List<Company>> GetCompanies();
+    Task<List<User>> GetEmployeesByCompanyId(int companyId);
 }

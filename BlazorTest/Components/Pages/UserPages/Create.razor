@@ -37,7 +37,6 @@
                 <ValidationMessage For="() => User.Email" class="text-danger" />
             </div>
             <div class="mb-3">
-                @* We set a fixed width for the label so the input boxes line up vertically *@
                 <label for="AFM" class="form-label">AFM:</label>
 
                 <div style="flex-grow: 0;">
@@ -48,10 +47,8 @@
                                maxlength="9" />
                 </div>
 
-                @* Standard Blazor Validation (Regex/Length) *@
                 <ValidationMessage For="() => User.AFM" class="text-danger" style="font-weight: bold; font-size: 14px;" />
 
-                @* Server-side Validation (The 'Invalid AFM' message from your Service) *@
                 @if (!string.IsNullOrEmpty(serverError))
                 {
                     <span class="text-danger" style="font-weight: bold; font-size: 14px;">@serverError</span>

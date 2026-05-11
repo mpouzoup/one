@@ -1,0 +1,85 @@
+﻿@page "/my-employees/{LoggedInCompanyId:int}"
+@using Domain.Models
+@using Application.Interfaces
+@inject ICompanyService CompanyService
+@inject NavigationManager Nav
+@rendermode InteractiveServer
+
+<h3>Employee Directory</h3>
+
+@if (currentCompany != null)
+{
+    <div class="alert alert-info">
+        Managing Employees for: <b>@currentCompany.Name</b>
+    </div>
+
+    <div class="mb-3">
+        <button class="btn btn-secondary" @onclick='() => Nav.NavigateTo("/company-management")'>Back to Companies</button>
+        <button class="btn btn-success" @onclick="PrepareNewEmployee">Add New Employee</button>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in employees)
+            {
+                <tr>
+                    <td>@emp.Name</td>
+                    <td>@emp.Email</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="() => EditEmployee(emp)">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Loading company details...</em></p>
+}
+
+@code {
+    [Parameter]
+    public int LoggedInCompanyId { get; set; }
+
+    private Company? currentCompany;
+    private List<User> employees = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            currentCompany = await CompanyService.GetCompanyById(LoggedInCompanyId);
+
+            if (currentCompany != null)
+            {
+                await LoadEmployees();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading employees: {ex.Message}");
+        }
+    }
+
+    private async Task LoadEmployees()
+    {
+        employees = await CompanyService.GetEmployeesByCompanyId(LoggedInCompanyId);
+    }
+
+    private void PrepareNewEmployee()
+    {
+        Nav.NavigateTo($"/users/create?CompanyId={LoggedInCompanyId}");
+    }
+    private void EditEmployee(User user) 
+    {
+        Nav.NavigateTo($"/users/edit?id={user.Id}"); 
+    }
+}

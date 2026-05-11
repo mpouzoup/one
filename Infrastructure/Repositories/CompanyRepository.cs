@@ -24,4 +24,12 @@ public class CompanyRepository : UnitOfWork, ICompanyRepository
         return await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == companyId);
     }
 
+    public async Task<List<User>> GetEmployeesByCompanyId(int companyId)
+    {
+        var company = await _dbContext.Companies
+            .Include(c => c.Users)
+            .FirstOrDefaultAsync(c => c.Id == companyId);
+
+        return company?.Users ?? new List<User>();
+    }
 }

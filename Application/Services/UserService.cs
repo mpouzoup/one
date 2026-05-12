@@ -8,6 +8,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -59,10 +60,10 @@ public class UserService : IUserService
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Company = user.Company,
-                CompanyId = user.CompanyId
+                CompanyId = user.CompanyId,
+                Password = PasswordEncryption.HashPassword(user.Password)
             };
-            _userRepository.Add(newUser);
-            await _userRepository.SaveChangesAsync();
+            
             if (user.Nicknames != null)
             {
                 foreach (var item in user.Nicknames)
@@ -71,6 +72,15 @@ public class UserService : IUserService
                     await _nicknameService.Save(item);
                 }
             }
+
+            _userRepository.Add(newUser);
+            await _userRepository.SaveChangesAsync();
+
+            var defaultRole = new UserRoles { UserId = newUser.Id, RoleId = 9 };
+
+            _userRepository.Add(defaultRole);
+
+            await _userRepository.SaveChangesAsync();
 
             return newUser;
         }
@@ -99,6 +109,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"UPDATE ERROR: {ex.Message}");
             throw;
         }
     }
@@ -150,8 +161,8 @@ public class UserService : IUserService
             if (user != null)
                 throw new Exception("A user with this email already exists.");
 
-            //if (!VatValidator.ValidateVatNumber(signUpDto.AFM))
-            //    throw new Exception("The AFM provided is invalid.");
+            if (!VatValidator.ValidateVatNumber(signUpDto.AFM))
+                throw new Exception("The AFM provided is invalid.");
             var newUser = new User()
             {
                 Name = signUpDto.Name,
@@ -196,12 +207,13 @@ public class UserService : IUserService
         {
             return null;
         }
+        var roleName = user.UserRoles.FirstOrDefault()?.Role?.Name;
         var claims = new List<Claim>
         {
 
-            new Claim(ClaimTypes.Name, user.Email, ClaimValueTypes.String),
-
-            new Claim(ClaimTypes.Role, user.UserRoles.FirstOrDefault().Role.Name, ClaimValueTypes.String),
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.Role, roleName ?? "User"),
+            new Claim("CompanyId", user.CompanyId.ToString())
 
         };
 

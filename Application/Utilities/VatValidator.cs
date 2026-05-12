@@ -7,19 +7,26 @@ namespace Application.Utilities;
 
 public static class VatValidator
 {
-    public static bool ValidateVatNumber(string vat)
+    public static bool ValidateVatNumber(string vatNumber)
     {
-        if (string.IsNullOrWhiteSpace(vat) || vat.Length != 9 || !vat.All(char.IsDigit))
+        if (string.IsNullOrWhiteSpace(vatNumber) || vatNumber.Length != 9 || !vatNumber.All(char.IsDigit))
+        {
             return false;
+        }
+
         int sum = 0;
+
         for (int i = 0; i < 8; i++)
         {
-            sum += (int)char.GetNumericValue(vat[i]) << (8 - i);
+            int digit = int.Parse(vatNumber[i].ToString());
+            sum += digit << (8 - i);
         }
 
         int remainder = sum % 11;
-        int checkDigit = remainder % 10;
+        int checkDigit = remainder == 10 ? 0 : remainder;
 
-        return checkDigit == (int)char.GetNumericValue(vat[8]);
+        int lastDigit = int.Parse(vatNumber[8].ToString());
+
+        return checkDigit == lastDigit;
     }
 }

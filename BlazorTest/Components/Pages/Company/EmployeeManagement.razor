@@ -4,6 +4,8 @@
 @inject ICompanyService CompanyService
 @inject NavigationManager Nav
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin, Manager")]
+@using Microsoft.AspNetCore.Authorization
 
 <h3>Employee Directory</h3>
 
@@ -14,7 +16,7 @@
     </div>
 
     <div class="mb-3">
-        <button class="btn btn-secondary" @onclick='() => Nav.NavigateTo("/company-management")'>Back to Companies</button>
+        @* <button class="btn btn-secondary" @onclick='() => Nav.NavigateTo("/company-management")'>Back to Companies</button> *@
         <button class="btn btn-success" @onclick="PrepareNewEmployee">Add New Employee</button>
     </div>
 

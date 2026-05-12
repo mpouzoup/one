@@ -1,7 +1,7 @@
 ﻿@page "/users/create"
-@using Application.Services
 @using Domain.Models
 @using Application.Interfaces
+@using Application.Utilities
 @inject IUserService UserService
 @inject ICompanyService CompanyService
 @inject NavigationManager NavigationManager
@@ -14,17 +14,21 @@
 <hr />
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <EditForm Model="User" OnValidSubmit="AddUser">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
             
+            @if (serverError != null)
+            {
+                <div class="alert alert-danger">@serverError</div>
+            }
+
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
                 <InputText id="name" @bind-Value="User.Name" class="form-control" />
                 <ValidationMessage For="() => User.Name" class="text-danger" />
             </div>
-            
+
             <div class="mb-3">
                 <label for="lastname" class="form-label">LastName:</label>
                 <InputText id="lastname" @bind-Value="User.LastName" class="form-control" />
@@ -36,33 +40,29 @@
                 <InputText id="email" @bind-Value="User.Email" class="form-control" />
                 <ValidationMessage For="() => User.Email" class="text-danger" />
             </div>
+
             <div class="mb-3">
-                <label for="AFM" class="form-label">AFM:</label>
-
-                <div style="flex-grow: 0;">
-                    <InputText id="AFM"
-                               @bind-Value="User.AFM"
-                               class="form-control"
-                               style="width: 300px;"
-                               maxlength="9" />
-                </div>
-
-                <ValidationMessage For="() => User.AFM" class="text-danger" style="font-weight: bold; font-size: 14px;" />
-
-                @if (!string.IsNullOrEmpty(serverError))
-                {
-                    <span class="text-danger" style="font-weight: bold; font-size: 14px;">@serverError</span>
-                }
+                <label for="afm" class="form-label">AFM:</label>
+                <InputText id="afm" @bind-Value="User.AFM" class="form-control" />
+                <ValidationMessage For="() => User.AFM" class="text-danger" />
             </div>
+
             <div class="mb-3">
-                <label for="Phone Number" class="form-label">Phone Number:</label>
-                <InputText id="Phone Number" @bind-Value="User.PhoneNumber" class="form-control" />
+                <label for="phone" class="form-label">Phone Number:</label>
+                <InputText id="phone" @bind-Value="User.PhoneNumber" class="form-control" />
                 <ValidationMessage For="() => User.PhoneNumber" class="text-danger" />
             </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <InputText id="password" type="password" @bind-Value="User.Password" class="form-control" />
+                <ValidationMessage For="() => User.Password" class="text-danger" />
+            </div>
+
             <div class="mb-3">
                 <label for="company" class="form-label">Company:</label>
                 <InputSelect id="company" @bind-Value="User.CompanyId" class="form-select">
-                    <option value="">-- Select a Company --</option>
+                    <option value="0">-- Select a Company --</option>
                     @foreach (var company in CompaniesList)
                     {
                         <option value="@company.Id">@company.Name</option>
@@ -70,28 +70,33 @@
                 </InputSelect>
                 <ValidationMessage For="() => User.CompanyId" class="text-danger" />
             </div>
-            <div class="mb-3">
-                <label class="form-label">Nicknames:</label>
-                <div class="input-group mb-2" style="width: 300px;">
-                    <InputText @bind-Value="newNickname" class="form-control" placeholder="Enter nickname" />
-                    <button type="button" class="btn btn-outline-secondary" @onclick="AddNicknameToList">Add</button>
-                </div>
 
-                <div class="d-flex flex-wrap gap-2">
-                    @foreach (var nick in NicknameStrings)
-                    {
-                        <span class="badge bg-info text-dark p-2">
-                            @nick
-                            <button type="button" class="btn-close btn-close-white ms-2"
-                                    style="font-size: 0.5rem;"
-                                    @onclick="() => RemoveNickname(nick)"></button>
-                        </span>
-                    }
+            <div class="card mt-4 mb-4 shadow-sm">
+                <div class="card-header bg-light">
+                    <strong>Add Nicknames</strong>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" @bind="newNickname" class="form-control" placeholder="Type a nickname..." />
+                        <button class="btn btn-outline-secondary" type="button" @onclick="AddNicknameToList">Add</button>
+                    </div>
+
+                    <ul class="list-group">
+                        @foreach (var nick in NicknameStrings)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@nick</span>
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => RemoveNickname(nick)">Remove</button>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Create User</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
         </EditForm>
     </div>
 </div>
@@ -110,9 +115,9 @@
 
     private void AddNicknameToList()
     {
-        if (!string.IsNullOrWhiteSpace(newNickname) && !NicknameStrings.Contains(newNickname))
+        if (!string.IsNullOrWhiteSpace(newNickname) && !NicknameStrings.Contains(newNickname.Trim()))
         {
-            NicknameStrings.Add(newNickname);
+            NicknameStrings.Add(newNickname.Trim());
             newNickname = string.Empty;
         }
     }
@@ -122,16 +127,18 @@
         NicknameStrings.Remove(nick);
     }
 
+
+
     private async Task AddUser()
     {
         serverError = null;
 
-        if (!Application.Utilities.VatValidator.ValidateVatNumber(User.AFM))
+        // Use the new bool return type
+        if (!VatValidator.ValidateVatNumber(User.AFM))
         {
-            serverError = "Το ΑΦΜ δεν είναι έγκυρο (Λάθος ψηφία ή αλγόριθμος).";
+            serverError = "The AFM provided is invalid. Please enter a valid 9-digit Greek Tax ID.";
             return;
         }
-
         try
         {
             User.Nicknames = NicknameStrings.Select(name => new Nickname
@@ -141,11 +148,10 @@
 
             await UserService.Save(User);
             NavigationManager.NavigateTo("/user-management");
-
         }
         catch (Exception ex)
         {
-            serverError = ex.Message;
+            serverError = "Παρουσιάστηκε σφάλμα κατά την αποθήκευση: " + ex.Message;
         }
     }
 

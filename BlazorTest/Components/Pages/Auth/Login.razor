@@ -1,21 +1,24 @@
 ﻿@page "/login"
 @using Application.Interfaces
-@using Domain.Models
-@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
 @inject IUserService UserService
 @inject NavigationManager NavManager
 
 
 <div class="container mt-5">
     <div class="row justify-content-center">
+
         <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Login</h3>
 
-                    <EditForm Model="@loginUser" OnValidSubmit="HandleLogin">
+                    <EditForm Model="@loginUser" OnValidSubmit="HandleLogin" FormName="LoginModel">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" />
+                        
+
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
@@ -44,13 +47,13 @@
     </div>
 </div>
 
+
 @code {
     [CascadingParameter]
-    public HttpContext? HttpContext{ get; set; }
+    public HttpContext? HttpContext { get; set; }
 
-    [SupplyParameterFromForm]
-    public LoginView Model { get; set; } = new();
-    private Application.Dtos.Auth.LoginModel loginUser = new();
+    [SupplyParameterFromForm]     
+    public Application.Dtos.Auth.LoginModel loginUser { get; set; } = new();
     private string? errorMessage;
 
     private async Task HandleLogin()
@@ -60,27 +63,33 @@
         try
         {
             var user = await UserService.Login(loginUser);
-
             if (user != null)
             {
-                if(user.UserRoles.Any(x => x.RoleId == 3))
+                var roleId = user.UserRoles.FirstOrDefault()?.RoleId;
+
+                if (roleId == 1) 
                 {
-                    NavManager.NavigateTo("/personal-info");  
+                    NavManager.NavigateTo("/user-management");
+                }
+                else if (roleId == 2)
+                {
+                    NavManager.NavigateTo($"/my-employees/{user.CompanyId}");
                 }
                 else
                 {
-                    NavManager.NavigateTo("/user-management");
-                    
+                    NavManager.NavigateTo("/profile-info");
                 }
+
             }
             else
             {
-                errorMessage = "Invalid email or password.";
+                NavManager.NavigateTo("/user-management");
             }
         }
         catch (Exception ex)
         {
-            errorMessage = "An error occurred during login. Please try again.";
+            errorMessage = ex.Message;
         }
     }
+
 }

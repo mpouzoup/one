@@ -38,8 +38,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZG1pbkRhc2hib2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/AccessDenied.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXEFjY2Vzc0RlbmllZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/Component.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXENvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXExvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/Logout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoXExvZ291dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/Auth/SignUp.razor]
@@ -80,6 +92,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcRWRpdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/ProfileInfo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcUHJvZmlsZUluZm8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/UserManagement.razor]

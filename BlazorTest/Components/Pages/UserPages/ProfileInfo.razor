@@ -1,0 +1,129 @@
+﻿@page "/profile-info"
+@using Domain.Models
+@using Application.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Προσωπικά Στοιχεία</PageTitle>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0" style="width: 100%; max-width: 800px;">
+        <div class="card-header bg-primary text-white p-3">
+            <h4 class="mb-0">Προσωπικά Στοιχεία</h4>
+        </div>
+
+        <div class="card-body p-4">
+            @if (!string.IsNullOrEmpty(serverError))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @serverError
+                    <button type="button" class="btn-close" @onclick="() => serverError = null"></button>
+                </div>
+            }
+
+            @if (userModel == null)
+            {
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            }
+            else
+            {
+                <EditForm Model="userModel" OnValidSubmit="HandleUpdate">
+                    <DataAnnotationsValidator />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Όνομα</label>
+                            <InputText @bind-Value="userModel.Name" class="form-control" />
+                            <ValidationMessage For="() => userModel.Name" class="text-danger" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Επώνυμο</label>
+                            <InputText @bind-Value="userModel.LastName" class="form-control" />
+                            <ValidationMessage For="() => userModel.LastName" class="text-danger" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="text" class="form-control bg-light" value="@userModel.Email" disabled />
+                        <small class="text-muted">Το email δεν μπορεί να αλλάξει για λόγους ασφαλείας.</small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">ΑΦΜ</label>
+                            <InputText @bind-Value="userModel.AFM" class="form-control" maxlength="9" />
+                            <ValidationMessage For="() => userModel.AFM" class="text-danger" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Τηλέφωνο</label>
+                            <InputText @bind-Value="userModel.PhoneNumber" class="form-control" />
+                            <ValidationMessage For="() => userModel.PhoneNumber" class="text-danger" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-success px-4 py-2 fw-bold">
+                            Αποθήκευση Αλλαγών
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary px-4 py-2" @onclick="Cancel">
+                            Ακύρωση
+                        </button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private User? userModel;
+    private string? serverError;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateTask!;
+        var claimsUser = authState.User;
+
+        // Note: You need to get the User ID from claims.
+        // If your Login method only stores Email, we use that to find the user.
+        var email = claimsUser.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(email))
+        {
+            // Fetch the user list and find the one matching the logged-in email
+            var allUsers = await UserService.GetAllUsers();
+            userModel = allUsers.FirstOrDefault(u => u.Email == email);
+        }
+    }
+
+    private async Task HandleUpdate()
+    {
+        serverError = null;
+        try
+        {
+            if (userModel != null)
+            {
+                await UserService.Update(userModel);
+                // Optional: Show success message or redirect
+            }
+        }
+        catch (Exception ex)
+        {
+            // This catches the VatValidator exception or "User not found" from your Service
+            serverError = ex.Message;
+        }
+    }
+
+    private void Cancel() => NavigationManager.NavigateTo("/");
+}

@@ -1,71 +1,114 @@
 ﻿@using Domain.Models
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorTest</a>
+@using Microsoft.AspNetCore.Components.Authorization
+
+<div class="top-row pe-3 navbar navbar-dark justify-content-end">
+    <div class="container-fluid justify-content-end">
+        <AuthorizeView>
+            <Authorized>
+                <span class="navbar-text me-3 text-white">
+                    Hello, @context.User.Identity?.Name!
+                </span>
+            </Authorized>
+            <NotAuthorized>
+                <a class="navbar-brand" href="">Account</a>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Account menu" class="navbar-toggler" id="right-nav-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable-right" onclick="document.getElementById('right-nav-toggler').click()">
     <nav class="nav flex-column">
-        
         <AuthorizeView>
-            @* --- EVERYTHING IN HERE ONLY SHOWS IF LOGGED IN --- *@
             <Authorized>
+                <!-- Profile Link - Visible to all logged in users -->
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    <NavLink class="nav-link" href="/profile-info">
+                        <span class="bi bi-person-badge-fill" aria-hidden="true"></span> My Profile
                     </NavLink>
                 </div>
 
-                @* Specific Role Links *@
-                <AuthorizeView Roles="User" Context="userContext">
+                <!-- Admin specific shortcuts -->
+                <AuthorizeView Roles="Admin" Context="innerContext">
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="personal-info">
-                            <span class="bi bi-person-fill" aria-hidden="true"></span> Personal Information
+                        <NavLink class="nav-link" href="/company-management">
+                            <span class="bi bi-terminal-fill" aria-hidden="true"></span> Company Management
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/user-management">
+                            <span class="bi bi-terminal-fill" aria-hidden="true"></span> Users Management
                         </NavLink>
                     </div>
                 </AuthorizeView>
 
-                <AuthorizeView Roles="Admin" Context="adminContext">
+                <AuthorizeView Roles="Manager" Context="innerContext">
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="user-management">
-                            <span class="bi bi-people-fill" aria-hidden="true"></span> User Management
-                        </NavLink>
+                        @if (userCompanyId.HasValue)
+                        {
+                            <NavLink class="nav-link" href="@($"/my-employees/{userCompanyId}")">
+                                <span class="bi bi-terminal-fill" aria-hidden="true"></span> My Employees
+                            </NavLink>
+                        }
+                        else
+                        {
+                            <span class="nav-link text-muted">
+                                <span class="bi bi-exclamation-circle" aria-hidden="true"></span> No Company Assigned
+                            </span>
+                        }
                     </div>
                 </AuthorizeView>
+                <div class="dropdown-divider"></div>
 
-                <AuthorizeView Roles="Company" Context="companyContext">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="company-management">
-                            <span class="bi bi-building-fill" aria-hidden="true"></span> Companies
-                        </NavLink>
-                    </div>
-                </AuthorizeView>
-
-                @* Logout Link for everyone who is logged in *@
+                <!-- Logout Action -->
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="logout">
-                        <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
-                    </NavLink>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="" />
+                        <button type="submit" class="nav-link btn btn-link text-start w-100 shadow-none">
+                            <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
+                        </button>
+                    </form>
                 </div>
             </Authorized>
 
-            @* --- ONLY SHOWS IF NOT LOGGED IN --- *@
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="login">
-                        <span class="bi bi-lock-fill" aria-hidden="true"></span> Login
+                    <NavLink class="nav-link" href="/login">
+                        <span class="bi bi-person-badge-fill" aria-hidden="true"></span> Log In
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/signup">
+                        <span class="bi bi-person-plus-fill" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
     </nav>
 </div>
 
 @code {
-    private User? User { get; set; } = new();
-    
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    private int? userCompanyId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState != null)
+        {
+            var authState = await AuthState;
+            var user = authState.User;
+
+            // Assuming you stored the CompanyId in a claim named "CompanyId"
+            var companyClaim = user.FindFirst("CompanyId")?.Value;
+
+            if (int.TryParse(companyClaim, out var id))
+            {
+                userCompanyId = id;
+            }
+        }
+    }
 }

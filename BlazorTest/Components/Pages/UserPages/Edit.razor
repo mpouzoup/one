@@ -178,7 +178,7 @@ else
                     }
                 }
 
-                NavigationManager.NavigateTo("/user-management");
+                NavigationManager.NavigateTo($"/my-employees/{User.CompanyId}");
             }
             catch (Exception ex)
             {
@@ -186,5 +186,15 @@ else
         }
     }
 
-    private void Cancel() => NavigationManager.NavigateTo("/user-management");
+    private void Cancel()
+    {
+        if (User != null)
+        {
+            NavigationManager.NavigateTo($"/my-employees/{User.CompanyId}");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/company-management");
+        }
+    }
 }

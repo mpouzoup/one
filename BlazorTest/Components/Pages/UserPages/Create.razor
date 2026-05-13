@@ -141,17 +141,14 @@
         }
         try
         {
-            User.Nicknames = NicknameStrings.Select(name => new Nickname
-            {
-                Value = name
-            }).ToList();
+           
 
             await UserService.Save(User);
             NavigationManager.NavigateTo("/user-management");
         }
         catch (Exception ex)
         {
-            serverError = "Παρουσιάστηκε σφάλμα κατά την αποθήκευση: " + ex.Message;
+            serverError = "Error while saving..." + ex.Message;
         }
     }
 

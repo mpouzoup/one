@@ -1,0 +1,49 @@
+﻿@using Domain.Models
+@using Application.IServices
+@inject IToDoService ToDoService
+
+<div class="card shadow-sm h-100">
+    <div class="card-header d-flex justify-content-between align-items-center bg-light">
+        <h5 class="mb-0">@List.Title</h5>
+        <button class="btn btn-sm btn-outline-danger" @onclick="DeleteList">Delete List</button>
+        <button class="btn btn-sm btn-outline-danger" @onclick="DeleteList">Delete List</button>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush mb-3">
+            @foreach (var task in List.Tasks)
+            {
+                <TaskItemComponent Task="task" OnChanged="HandleUpdate" />
+            }
+        </ul>
+
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control" @bind="newTaskDesc" placeholder="Add a task..." />
+            <button class="btn btn-primary" @onclick="AddNewTask">Add</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public ToDoList List { get; set; }
+    [Parameter] public EventCallback OnListChanged { get; set; }
+    private string newTaskDesc;
+
+    private async Task AddNewTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTaskDesc))
+        {
+            var task = new TaskItem { Description = newTaskDesc, ToDoListId = List.Id };
+            await ToDoService.AddTaskToList(task);
+            newTaskDesc = "";
+            await HandleUpdate();
+        }
+    }
+
+    private async Task DeleteList()
+    {
+        await ToDoService.DeleteListById(List.Id);
+        await HandleUpdate();
+    }
+
+    private async Task HandleUpdate() => await OnListChanged.InvokeAsync();
+}

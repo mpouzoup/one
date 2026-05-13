@@ -328,7 +328,6 @@ C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\staticwebassets.build.json.c
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\staticwebassets.development.json
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\swae.build.ex.cache
-C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\BlazorTest.csproj.Up2Date
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\BlazorTest.dll
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\refint\BlazorTest.dll
@@ -339,3 +338,4 @@ C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\compressed\y25xqdro7j-{0}-b9
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\compressed\vl3tvi4l6i-{0}-2tj1sjhksk-2tj1sjhksk.gz
 C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\BlazorTest.sourcelink.json
 C:\Projects\BlazorTest\BlazorTest\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Projects\BlazorTest\BlazorTest\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

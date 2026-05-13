@@ -21,7 +21,8 @@ public class User : Entity
     public List<UserRoles> UserRoles { get; set; }
     virtual public Company? Company { get; set; } = default;
     virtual public List<Nickname> Nicknames { get; set; } = new List<Nickname>();
-    
+    public virtual ICollection<ToDoList> TodoLists { get; set; }
+
 
     public User UpdateValues(User user)
     {

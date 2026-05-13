@@ -25,6 +25,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Company> Companies { get; set; }
     public virtual DbSet<Nickname> Nicknames { get; set; }
+    public virtual DbSet<ToDoList> TodoLists { get; set; }
+    public virtual DbSet<TaskItem> Tasks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,8 +72,32 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<UserRoles>()
             .HasOne(ur => ur.Role)
             .WithMany(r => r.UserRoles)
-            .HasForeignKey(ur => ur.RoleId);        
+            .HasForeignKey(ur => ur.RoleId);
+
+        modelBuilder.Entity<ToDoList>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(t => t.User)
+                .WithMany(u => u.TodoLists)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<TaskItem>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(ti => ti.ToDoList)
+                .WithMany(t => t.Tasks)
+                .HasForeignKey(ti => ti.ToDoListId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Description).IsRequired();
+        });
     }
+
+
 
 }
 

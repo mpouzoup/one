@@ -116,6 +116,56 @@ namespace Infrastructure.Migrations
                     b.ToTable("Role");
                 });
 
+            modelBuilder.Entity("Domain.Models.TaskItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ToDoListId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToDoListId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("Domain.Models.ToDoList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TodoLists");
+                });
+
             modelBuilder.Entity("Domain.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -210,6 +260,28 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Models.TaskItem", b =>
+                {
+                    b.HasOne("Domain.Models.ToDoList", "ToDoList")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ToDoListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ToDoList");
+                });
+
+            modelBuilder.Entity("Domain.Models.ToDoList", b =>
+                {
+                    b.HasOne("Domain.Models.User", "User")
+                        .WithMany("TodoLists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Models.User", b =>
                 {
                     b.HasOne("Domain.Models.Company", "Company")
@@ -251,9 +323,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("Domain.Models.ToDoList", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
             modelBuilder.Entity("Domain.Models.User", b =>
                 {
                     b.Navigation("Nicknames");
+
+                    b.Navigation("TodoLists");
 
                     b.Navigation("UserRoles");
                 });

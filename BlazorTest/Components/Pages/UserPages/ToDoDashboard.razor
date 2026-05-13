@@ -1,0 +1,69 @@
+﻿@page "/todo"
+@using Domain.Models
+@using Application.IServices
+@inject IToDoService ToDoService
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">User 4030's Dashboard</h2>
+        <button class="btn btn-success shadow-sm" @onclick="CreateNewList">
+            <i class="bi bi-plus-circle"></i> Create New List
+        </button>
+    </div>
+
+    @if (userLists == null)
+    {
+        <div class="text-center mt-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Fetching your tasks...</p>
+        </div>
+    }
+    else if (!userLists.Any())
+    {
+        <div class="alert alert-light border text-center p-5 shadow-sm">
+            <h4>No lists found!</h4>
+            <p class="text-muted">Get started by creating your first To-Do list above.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var list in userLists)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <ToDoListComponent List="list" OnListChanged="LoadDashboardData" />
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private const int CurrentUserId = 4030;
+    private List<ToDoList> userLists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboardData();
+    }
+
+    private async Task LoadDashboardData()
+    {
+        userLists = await ToDoService.GetAllUserLists(CurrentUserId);
+
+        StateHasChanged();
+    }
+
+    private async Task CreateNewList()
+    {
+        var newList = new ToDoList
+        {
+            Title = "New Task List",
+            UserId = CurrentUserId,
+            Tasks = new List<TaskItem>()
+        };
+
+        await ToDoService.CreateList(newList);
+        await LoadDashboardData();
+    }
+}

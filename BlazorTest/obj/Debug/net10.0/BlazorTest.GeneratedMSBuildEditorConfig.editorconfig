@@ -98,6 +98,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcUHJvZmlsZUluZm8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/TaskItemComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcVGFza0l0ZW1Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/ToDoDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcVG9Eb0Rhc2hib2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/ToDoListComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcVG9Eb0xpc3RDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/BlazorTest/BlazorTest/Components/Pages/UserPages/UserManagement.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyUGFnZXNcVXNlck1hbmFnZW1lbnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

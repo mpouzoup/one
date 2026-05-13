@@ -1,0 +1,35 @@
+﻿@using Domain.Models
+@using Application.IServices
+@inject IToDoService ToDoService
+
+<li class="list-group-item d-flex justify-content-between align-items-center">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox"
+               checked="@Task.IsCompleted"
+               @onchange="ToggleStatus" />
+        <span style="@(Task.IsCompleted ? "text-decoration: line-through; color: gray;" : "")">
+            @Task.Description
+        </span>
+    </div>
+    <button class="btn btn-sm text-danger" @onclick="DeleteSelf">
+        <i class="bi bi-trash"></i>
+    </button>
+</li>
+
+@code {
+    [Parameter] public TaskItem Task { get; set; }
+    [Parameter] public EventCallback OnChanged { get; set; }
+
+    private async Task ToggleStatus()
+    {
+        Task.IsCompleted = !Task.IsCompleted;
+        await ToDoService.UpdateTask(Task);
+        await OnChanged.InvokeAsync();
+    }
+
+    private async Task DeleteSelf()
+    {
+        await ToDoService.DeleteTaskById(Task.Id);
+        await OnChanged.InvokeAsync();
+    }
+}

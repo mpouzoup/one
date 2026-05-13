@@ -64,19 +64,11 @@ public class UserService : IUserService
                 Password = PasswordEncryption.HashPassword(user.Password)
             };
             
-            if (user.Nicknames != null)
-            {
-                foreach (var item in user.Nicknames)
-                {
-                    item.UserId = newUser.Id;
-                    await _nicknameService.Save(item);
-                }
-            }
 
             _userRepository.Add(newUser);
             await _userRepository.SaveChangesAsync();
 
-            var defaultRole = new UserRoles { UserId = newUser.Id, RoleId = 9 };
+            var defaultRole = new UserRoles { UserId = newUser.Id, RoleId = 3 };
 
             _userRepository.Add(defaultRole);
 
